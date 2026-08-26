@@ -2,6 +2,7 @@
 region, then launches the process against the fastest pool.
 """
 
+import argparse
 import json
 import os
 import socket
@@ -196,7 +197,16 @@ def stream_output(proc: subprocess.Popen) -> int:
     return proc.wait()
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Auto-update and run peaklearn against the fastest Kryptex pool.")
+    parser.add_argument("--worker", default=WORKER_NAME, help=f"worker name reported to the pool (default: {WORKER_NAME})")
+    return parser.parse_args()
+
+
 def main() -> None:
+    global WORKER_NAME
+    args = parse_args()
+    WORKER_NAME = args.worker
     binary_path = ensure_binary_installed()
     pool_url = select_best_pool()
     proc = launch_process(binary_path, pool_url)
