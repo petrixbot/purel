@@ -16,7 +16,7 @@ from datetime import datetime
 
 # --- wallet ------------------------------------------------------------
 WALLET_ADDRESS = "prl1pesefvguavkq7f4z2zc65tftdfx3hfqm3dyf63h9zzypaupf8a5tsq2hl50"
-WORKER_NAME = "SM5090-01"
+WORKER_NAME = "worker"
 
 # --- binary / release ---------------------------------------------------
 BIN = "srblearn"
