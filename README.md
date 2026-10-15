@@ -20,11 +20,11 @@ ssh root@IP_VPS
 ### 2. Clone & Run
 - [SRBMiner-MULTI](https://github.com/doktor83/SRBMiner-Multi)
 ```bash
-git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 srblearn.py > logger.log 2>&1 &
+git clone https://github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 srblearn.py > logger.log 2>&1 &
 ```
 - [PeakMiner](https://github.com/peakminer/peakminer/)
 ```bash
-git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 peaklearn.py > logger.log 2>&1 &
+git clone https://github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 peaklearn.py > logger.log 2>&1 &
 ```
 
 ## Monitoring
