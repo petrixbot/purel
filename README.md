@@ -3,7 +3,9 @@ Simple automation scripts for downloading and running mining software in the bac
 
 ## Features
 * ⚡ One-command installation and execution
-* 🔄 Automatically downloads the latest miner version
+* 🔄 Automatically downloads the latest version
+* 🎲 Random worker name generated on every run (6 chars, lowercase)
+* 🚀 Probes Kryptex pools and picks the lowest-latency region automatically
 * 🖥️ Designed for VPS / container environments
 * 🔕 Runs in the background using `nohup`
 
@@ -18,15 +20,15 @@ ssh root@IP_VPS
 ### 2. Clone & Run
 - [SRBMiner-MULTI](https://github.com/doktor83/SRBMiner-Multi)
 ```bash
-git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 peaklearn.py --worker worker01 > logger.log 2>&1 &
+git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 srblearn.py > logger.log 2>&1 &
 ```
 - [PeakMiner](https://github.com/peakminer/peakminer/)
 ```bash
-git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 srblearn.py --worker worker01 > logger.log 2>&1 &
+git clone https://petrixbot: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@github.com/petrixbot/purel.git /root/learning && cd /root/learning && nohup python3 peaklearn.py > logger.log 2>&1 &
 ```
 
 ## Monitoring
-View the running miner logs:
+View the running logs:
 ```bash
 tail -f /root/learning/logger.log
 ```
@@ -36,7 +38,7 @@ Check the running process:
 ps aux | grep -E "peaklearn|srblearn|python3"
 ```
 
-Stop the miner:
+Stop the process:
 ```bash
 pkill -f "peaklearn.py"
 ```
